@@ -94,20 +94,19 @@ def speech_reception():
                         if text[i:i+4]=="ストップ" or text[lenText-4-i:lenText-i-1+1]=="ストップ":
                             print("ストップを検知しました。システムを終了します\n")
                             sys.exit()
-
-                target = isolate_word(text)
-                if target == "nothing":
-                    print("Could not request results")
-                    continue
-
-                #テキスト音声ファイルでの実験時はリターンなしで全ファイルを試してみる
-                return target
-
-
+                            #改良前のいち
             except sr.UnknownValueError:
                 print("Google Speech Recognition could not understand audio")
+                continue
             except sr.RequestError as e:
                 print("Could not request results from Google Speech Recognition service; {0}".format(e))
+                continue
+            target = isolate_word(text)
+            if target == "nothing":
+                print("Could not request results")
+                continue
+            #テキスト音声ファイルでの実験時はリターンなしで全ファイルを試してみる
+            return target
 
 def move (target):
     #print(target)
@@ -178,13 +177,16 @@ def final_move(A):
      if name == target :
        B= ymax-ymin
    if B==0:
-      print("見失いました,近辺にある...ってこと？")
+      print("見失いました,近辺にある...？")
       drone.land()
       sys.exit()
    time.sleep(5)
    drone.move_forward(analyDistance(A,B))
-   print("見つけました？、システムを終了します")
+   print("見つけました、システムを終了します")
+   time.sleep(5)
    drone.land()
+   time.sleep(5)
+   del drone
    return 0
 
 #システム本体
